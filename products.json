@@ -1,0 +1,10 @@
+[
+    {
+        "code_prod": 1,
+        "nom_prod": "product1",
+        "description": "this is a product",
+        "quantite": 5,
+        "prix_unit": 10.0,
+        "status": "ARCHIVED"
+    }
+]
