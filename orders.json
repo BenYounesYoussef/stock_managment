@@ -1,1 +1,66 @@
-[]
+[
+    {
+        "code_cmd": 1,
+        "lines": [
+            {
+                "code_prod": 1,
+                "quantity": 1,
+                "price_at_order_time": 10.0
+            }
+        ],
+        "status": "ARCHIVED",
+        "payment_status": "UNPAID",
+        "delivery_status": "NOT_SHIPPED",
+        "created_at": "2025-12-21 07:49:56",
+        "updated_at": "2025-12-21 16:04:10",
+        "paid_at": null,
+        "delivered_at": null,
+        "paid_amount": 0.0
+    },
+    {
+        "code_cmd": 2,
+        "lines": [
+            {
+                "code_prod": 2,
+                "quantity": 11,
+                "price_at_order_time": 5.0
+            },
+            {
+                "code_prod": 1,
+                "quantity": 5,
+                "price_at_order_time": 10.0
+            }
+        ],
+        "status": "CANCELLED",
+        "payment_status": "PAID",
+        "delivery_status": "NOT_SHIPPED",
+        "created_at": "2025-12-21 07:51:10",
+        "updated_at": "2025-12-21 16:04:10",
+        "paid_at": null,
+        "delivered_at": null,
+        "paid_amount": 0.0
+    },
+    {
+        "code_cmd": 3,
+        "lines": [
+            {
+                "code_prod": 3,
+                "quantity": 1,
+                "price_at_order_time": 20.0
+            },
+            {
+                "code_prod": 2,
+                "quantity": 5,
+                "price_at_order_time": 5.0
+            }
+        ],
+        "status": "CONFIRMED",
+        "payment_status": "PAID",
+        "delivery_status": "NOT_SHIPPED",
+        "created_at": "2025-12-21 14:35:04",
+        "updated_at": "2025-12-21 16:04:10",
+        "paid_at": null,
+        "delivered_at": null,
+        "paid_amount": 0.0
+    }
+]

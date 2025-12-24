@@ -38,7 +38,7 @@ class ConsoleInterface:
             self.print_header("GESTION DES PRODUITS")
             print("1. Ajouter un produit")
             print("2. Modifier un produit")
-            print("3. Supprimer un produit")
+            print("3. Archiver un produit")
             print("4. Lister les produits (A-Z)")
             print("5. Retour")
 
@@ -123,7 +123,7 @@ class ConsoleInterface:
         while True:
             self.print_header("GESTION DES COMMANDES")
             print("1. Créer une commande")
-            print("2. Supprimer une commande")
+            print("2. Archiver une commande")
             print("3. Afficher Statistiques")
             print("4. Historique des commandes")
             print("5. Retour")

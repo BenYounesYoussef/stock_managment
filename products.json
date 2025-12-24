@@ -5,6 +5,38 @@
         "description": "this is a product",
         "quantite": 5,
         "prix_unit": 10.0,
+        "status": "ACTIVE"
+    },
+    {
+        "code_prod": 2,
+        "nom_prod": "product2",
+        "description": "not a product ",
+        "quantite": 45,
+        "prix_unit": 5.0,
+        "status": "ACTIVE"
+    },
+    {
+        "code_prod": 3,
+        "nom_prod": "product3",
+        "description": "this is actually a product for real ",
+        "quantite": 49,
+        "prix_unit": 20.0,
+        "status": "ACTIVE"
+    },
+    {
+        "code_prod": 4,
+        "nom_prod": "product4",
+        "description": "it won't show up in database",
+        "quantite": 25,
+        "prix_unit": 1.0,
+        "status": "ACTIVE"
+    },
+    {
+        "code_prod": 5,
+        "nom_prod": "product5",
+        "description": "z",
+        "quantite": 525,
+        "prix_unit": 14.0,
         "status": "ARCHIVED"
     }
 ]
