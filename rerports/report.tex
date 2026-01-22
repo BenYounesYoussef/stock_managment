@@ -1,0 +1,176 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,shadows}
+
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+
+% Configuration pour le code Python
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{\textbf{Rapport de Mini-Projet Python 3}\\Gestion de Stock}
+\author{Youssef Ben Younes \& Mohammed Massoudi }
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Introduction et Analyse}
+\section{Introduction}
+Ce projet a pour objectif de concevoir et développer une application de gestion de stock en langage Python. Cette application permet de gérer les produits et les commandes d'une entreprise, en assurant la persistance des données et en fournissant des statistiques simples.
+
+\section{Objectifs du Projet}
+Les principaux objectifs sont :
+\begin{itemize}
+    \item Valider les compétences acquises en programmation Python.
+    \item Mettre en œuvre les concepts de la Programmation Orientée Objet (POO).
+    \item Créer une interface utilisateur graphique (GUI) avec PyQt6.
+    \item Gérer la persistance des données via des fichiers JSON.
+\end{itemize}
+
+\section{Analyse des Besoins}
+\subsection{Besoins Fonctionnels}
+L'application doit permettre de :
+\begin{itemize}
+    \item Gérer les produits : Ajout, Modification, Suppression, Affichage (trié).
+    \item Gérer les commandes : Création, Suppression (avec historique), Statistiques.
+    \item Persistance : Sauvegarde automatique des données.
+\end{itemize}
+
+\subsection{Besoins Non-Fonctionnels}
+\begin{itemize}
+    \item Le code doit être modulaire et bien commenté.
+    \item L'interface doit être intuitive.
+    \item Le programme doit être robuste (gestion des erreurs de saisie).
+\end{itemize}
+
+\chapter{Conception et Implémentation}
+\section{Architecture du Projet}
+Le projet est structuré en plusieurs modules pour assurer une séparation claire des responsabilités :
+\begin{itemize}
+    \item \texttt{models.py} : Contient les classes \texttt{Product} et \texttt{Order}.
+    \item \texttt{manager.py} : Gère la logique métier et la persistance des données.
+    \item \texttt{gui.py} : Contient l'interface graphique (Fenêtre principale, Onglets).
+    \item \texttt{main.py} : Point d'entrée de l'application.
+\end{itemize}
+
+\section{Diagramme de Classes (Simplifié)}
+\begin{center}
+\begin{tikzpicture}[
+  class/.style={rectangle split, rectangle split parts=2, draw=black, rounded corners, fill=blue!10, drop shadow, align=center, minimum height=1cm, minimum width=3cm},
+  line/.style={draw, -latex'}
+]
+
+% Nodes
+\node[class] (Product) {
+    \textbf{Product}
+    \nodepart{second}
+    code\_prod: int \\
+    nom\_prod: str \\
+    description: str \\
+    quantite: int \\
+    prix\_unit: float
+};
+
+\node[class, right=2cm of Product] (Order) {
+    \textbf{Order}
+    \nodepart{second}
+    code\_cmd: int \\
+    code\_prod: int \\
+    quantite\_cmd: int \\
+    date: str \\
+    status: str
+};
+
+\node[class, rectangle split parts=3, below=2cm of Product] (Manager) {
+    \textbf{StockManager}
+    \nodepart{second}
+    products: List[Product] \\
+    orders: List[Order]
+    \nodepart{third}
+    add\_product() \\
+    create\_order()
+};
+
+\node[class, rectangle split parts=3, below=2cm of Order] (Interface) {
+    \textbf{MainWindow}
+    \nodepart{second}
+    manager: StockManager \\
+    tabs: QTabWidget
+    \nodepart{third}
+    init\_ui() \\
+    on\_tab\_change()
+};
+
+% Arrows
+\draw[line] (Manager) -- (Product) node[midway, left] {Gère};
+\draw[line] (Manager) -- (Order) node[midway, right] {Gère};
+\draw[line] (Interface) -- (Manager) node[midway, above] {Utilise};
+
+\end{tikzpicture}
+\end{center}
+
+\section{Implémentation Technique}
+\subsection{Persistance des Données}
+Nous avons choisi le format JSON pour stocker les données car il est léger et facile à lire en Python. Le module \texttt{json} est utilisé pour sérialiser et désérialiser les objets.
+
+\subsection{Gestion de l'Historique}
+Pour répondre à l'exigence de conservation de l'historique, la suppression d'une commande ne l'efface pas physiquement du fichier. Un champ \texttt{status} est passé à "deleted", ce qui permet de filtrer les commandes actives tout en gardant une trace.
+
+\chapter{Manuel d'Utilisation et Conclusion}
+\section{Manuel d'Utilisation}
+\subsection{Lancement}
+Pour lancer l'application, exécutez la commande suivante dans le terminal (assurez-vous d'avoir installé PyQt6) :
+\begin{lstlisting}[language=bash]
+pip install PyQt6
+python main.py
+\end{lstlisting}
+
+\subsection{Fonctionnalités Principales}
+L'interface est divisée en trois onglets :
+\begin{enumerate}
+    \item \textbf{Produits} : Formulaire pour ajouter/modifier des produits et tableau listant le stock.
+    \item \textbf{Commandes} : Sélectionnez un produit et une quantité pour commander. L'historique est affiché en bas.
+    \item \textbf{Statistiques} : Affiche les produits les plus vendus.
+\end{enumerate}
+
+\section{Conclusion}
+Ce projet nous a permis de mettre en pratique les concepts fondamentaux de Python et de découvrir la création d'interfaces graphiques avec PyQt6.
+L'utilisation de PyQt a rendu l'application plus conviviale et interactive par rapport à une simple console.
+Les principales difficultés rencontrées concernaient la gestion des signaux et des slots dans PyQt.
+
+\end{document}

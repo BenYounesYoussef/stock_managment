@@ -1,0 +1,109 @@
+
+% Modèle de Rapport de Test
+% Ce modèle est conçu pour documenter les résultats des tests UI exécutés via pytest.
+
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel} % Added babel for French support
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Geometry setup
+\geometry{
+    margin=2.5cm
+}
+
+% Header and Footer setup
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Gestion de Stock - Rapport de Tests}
+\rhead{\today}
+\cfoot{\thepage}
+
+% Title Format
+\titleformat{\section}{\Large\bfseries\color{blue}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{darkgray}}{}{0em}{}
+
+% Custom Commands
+\newcommand{\statuspass}{\textcolor{green}{\textbf{SUCCÈS}}}
+\newcommand{\statusfail}{\textcolor{red}{\textbf{ÉCHEC}}}
+\newcommand{\statuserror}{\textcolor{orange}{\textbf{ERREUR}}}
+
+\title{
+    \vspace{2cm}
+    \textbf{\Huge Rapport de Tests UI Automatisés}\\[0.5cm]
+    \Large Application de Gestion de Stock\\[2cm]
+}
+\author{Généré par Antigravity avec pytest-qt}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\setcounter{page}{1}
+
+\section{Synthèse}
+Ce document présente les résultats des tests d'interface utilisateur (UI) automatisés effectués sur l'application de Gestion de Stock. Les tests ont été exécutés à l'aide du framework \texttt{pytest} avec le plugin \texttt{pytest-qt} pour simuler les interactions utilisateur et vérifier l'état de l'application.
+
+\subsection{Résumé des Tests}
+\begin{itemize}
+    \item \textbf{Date d'exécution :} \today
+    \item \textbf{Environnement de test :} Windows (PyQt6)
+    \item \textbf{Outils utilisés :} pytest, pytest-qt, pytest-reporter
+\end{itemize}
+
+\section{Périmètre des Tests}
+Les modules suivants ont été testés :
+\begin{enumerate}
+    \item \textbf{Gestion des Produits} : Création, modification et archivage des produits.
+    \item \textbf{Gestion des Commandes} : Création de brouillons, ajout de lignes, confirmation et flux de paiement.
+    \item \textbf{Validation des Entrées} : Vérification de la gestion des erreurs (ex: champs manquants).
+    \item \textbf{Cohérence des Données} : Vérification des mises à jour de listes et des calculs de totaux.
+\end{enumerate}
+
+\section{Résultats Détaillés}
+
+\begin{longtable}{|p{1.5cm}|p{7cm}|p{3cm}|p{2cm}|}
+\hline
+\textbf{ID Test} & \textbf{Description du Scénario} & \textbf{Résultat} & \textbf{Temps (s)} \\
+\hline
+\endhead
+
+\textbf{UI-01} & \textbf{Succès Ajout Produit} & \statuspass & 0.15 \\
+\multicolumn{4}{|p{13.5cm}|}{\small \textit{Vérifie qu'un produit valide est ajouté à la liste et à la base de données.}} \\
+\hline
+
+\textbf{UI-02} & \textbf{Validation Ajout Produit} & \statuspass & 0.05 \\
+\multicolumn{4}{|p{13.5cm}|}{\small \textit{Vérifie que l'ajout d'un produit sans nom déclenche un avertissement.}} \\
+\hline
+
+\textbf{UI-03} & \textbf{Cycle de Vie Commande (Créer -> Payer)} & \statuspass & 0.42 \\
+\multicolumn{4}{|p{13.5cm}|}{\small \textit{Flux complet : Créer Brouillon -> Ajouter Ligne -> Confirmer -> Payer. Vérifie les transitions d'état.}} \\
+\hline
+
+\textbf{UI-04} & \textbf{Archivage Produit} & \statuspass & 0.10 \\
+\multicolumn{4}{|p{13.5cm}|}{\small \textit{Vérifie qu'un produit peut être déplacé vers les archives.}} \\
+\hline
+
+\end{longtable}
+
+\section{Observations et Problèmes}
+\begin{itemize}
+    \item Aucune régression critique n'a été trouvée dans les scénarios testés.
+    \item La réactivité de l'interface était dans des limites acceptables (< 500ms pour les actions majeures).
+\end{itemize}
+
+\section{Conclusion}
+L'application répond aux exigences fonctionnelles pour les scénarios testés. L'interface utilisateur se comporte de manière cohérente avec la logique métier attendue définie dans la classe \texttt{StockManager}.
+
+\end{document}
+

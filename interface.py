@@ -123,22 +123,37 @@ class ConsoleInterface:
         while True:
             self.print_header("GESTION DES COMMANDES")
             print("1. Créer une commande")
-            print("2. Archiver une commande")
-            print("3. Afficher Statistiques")
-            print("4. Historique des commandes")
-            print("5. Retour")
+            print("2. Voir les détails d'une commande")
+            print("3. Confirmer une commande")
+            print("4. Payer une commande")
+            print("5. Livrer une commande")
+            print("6. Annuler une commande")
+            print("7. Archiver une commande")
+            print("8. Afficher Statistiques")
+            print("9. Historique des commandes")
+            print("10. Retour")
 
             choice = input("\nVotre choix: ")
 
             if choice == '1':
                 self.create_order_view()
             elif choice == '2':
-                self.delete_order_view()
+                self.view_order_details_view()
             elif choice == '3':
-                self.stats_view()
+                self.confirm_order_view()
             elif choice == '4':
-                self.history_view()
+                self.pay_order_view()
             elif choice == '5':
+                self.deliver_order_view()
+            elif choice == '6':
+                self.cancel_order_view()
+            elif choice == '7':
+                self.delete_order_view()
+            elif choice == '8':
+                self.stats_view()
+            elif choice == '9':
+                self.history_view()
+            elif choice == '10':
                 break
             else:
                 print("Choix invalide.")
@@ -146,25 +161,74 @@ class ConsoleInterface:
     def create_order_view(self):
         self.print_header("NOUVELLE COMMANDE")
         try:
+            print("--- Premier Produit ---")
             code_prod = int(input("Code du produit: "))
             qty = int(input("Quantité commandée: "))
-            result = self.manager.create_order(code_prod, qty)
-            if isinstance(result, str): # Error message
-                print(f"Erreur: {result}")
-            else:
-                print(f"Commande créée: {result}")
-                # Generate Invoice
-                print("\n--- FACTURE ---")
-                prod = self.manager.get_product(code_prod)
-                total = prod.prix_unit * qty
-                print(f"Produit: {prod.nom_prod}")
-                print(f"Quantité: {qty}")
-                print(f"Prix Unitaire: {prod.prix_unit}€")
-                print(f"Total à payer: {total}€")
-                print("---------------")
+            order = self.manager.create_order(code_prod, qty)
+            
+            if isinstance(order, str): # Error message
+                print(f"Erreur: {order}")
+                input("\nAppuyez sur Entrée pour continuer...")
+                return
+            
+            print(f"Commande créée: {order.code_cmd}")
+            
+            # Additional lines loop
+            while True:
+                choice = input("\nAjouter un autre produit ? (o/n): ").lower()
+                if choice != 'o':
+                    break
+                
+                try:
+                    code_prod = int(input("Code du produit: "))
+                    qty = int(input("Quantité commandée: "))
+                    res = self.manager.add_line_to_order(order.code_cmd, code_prod, qty)
+                    if res is True:
+                         print("Ligne ajoutée.")
+                    else:
+                         print(f"Erreur: {res}")
+                except ValueError:
+                    print("Erreur de saisie.")
+
+            # Show Recap
+            self.print_order_details(order.code_cmd)
+                
         except ValueError:
             print("Erreur de saisie.")
         input("\nAppuyez sur Entrée pour continuer...")
+
+    def view_order_details_view(self):
+        self.print_header("DETAILS COMMANDE")
+        try:
+            code = int(input("Code de la commande: "))
+            self.print_order_details(code)
+        except ValueError:
+            print("Erreur de saisie.")
+        input("\nAppuyez sur Entrée pour continuer...")
+
+    def print_order_details(self, code_cmd):
+        order = self.manager.get_order(code_cmd)
+        if not order:
+            print("Commande introuvable.")
+            return
+
+        print("\n" + "="*30)
+        print(f"COMMANDE #{order.code_cmd}")
+        print(f"Status: {order.status.value}")
+        print(f"Paiement: {order.payment_status.value}")
+        print(f"Livraison: {order.delivery_status.value}")
+        print("-" * 30)
+        print(f"{'Produit':<20} {'Qté':<5} {'Total':<10}")
+        print("-" * 30)
+        
+        for line in order.lines:
+            prod = self.manager.get_product(line.code_prod)
+            name = prod.nom_prod if prod else f"Unknown ({line.code_prod})"
+            print(f"{name:<20} {line.quantity:<5} {line.total:<10.2f}")
+            
+        print("-" * 30)
+        print(f"TOTAL: {order.total_amount:.2f}€")
+        print("="*30)
 
     def delete_order_view(self):
         self.print_header("SUPPRIMER COMMANDE")
@@ -174,6 +238,61 @@ class ConsoleInterface:
                 print("Commande supprimée (archivée dans l'historique).")
             else:
                 print("Commande introuvable.")
+        except ValueError:
+            print("Erreur de saisie.")
+        input("\nAppuyez sur Entrée pour continuer...")
+
+    def confirm_order_view(self):
+        self.print_header("CONFIRMER COMMANDE")
+        try:
+            code = int(input("Code de la commande: "))
+            res = self.manager.confirm_order(code)
+            if res is True:
+                print("Commande confirmée avec succès.")
+            else:
+                print(f"Erreur: {res}")
+        except ValueError:
+            print("Erreur de saisie.")
+        input("\nAppuyez sur Entrée pour continuer...")
+
+    def pay_order_view(self):
+        self.print_header("PAYER COMMANDE")
+        try:
+            code = int(input("Code de la commande: "))
+            amount_str = input("Montant (laisser vide pour tout payer): ")
+            amount = float(amount_str) if amount_str else None
+            
+            res = self.manager.pay_order(code, amount)
+            if res is True:
+                print("Paiement enregistré.")
+            else:
+                print(f"Erreur: {res}")
+        except ValueError:
+            print("Erreur de saisie.")
+        input("\nAppuyez sur Entrée pour continuer...")
+
+    def deliver_order_view(self):
+        self.print_header("LIVRER COMMANDE")
+        try:
+            code = int(input("Code de la commande: "))
+            res = self.manager.deliver_order(code)
+            if res is True:
+                print("Commande livrée avec succès.")
+            else:
+                print(f"Erreur: {res}")
+        except ValueError:
+            print("Erreur de saisie.")
+        input("\nAppuyez sur Entrée pour continuer...")
+
+    def cancel_order_view(self):
+        self.print_header("ANNULER COMMANDE")
+        try:
+            code = int(input("Code de la commande: "))
+            res = self.manager.cancel_order(code)
+            if res is True:
+                print("Commande annulée.")
+            else:
+                print(f"Erreur: {res}")
         except ValueError:
             print("Erreur de saisie.")
         input("\nAppuyez sur Entrée pour continuer...")
